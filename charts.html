@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Timecharts</title>
+    <script src="js/Chart.bundle.min.js"></script>
+  </head>
+  <body>
+    <h2>Projects</h2>
+    <canvas id="projectChart" width="400" height="200"></canvas>
+    <h2>Users</h2>
+    <canvas id="userChart" width="400" height="200"></canvas>
+    <script src="data.js"></script>
+    <script>
+    var ctx = document.getElementById("projectChart");
+    var projectsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: data.projects.map(function(p, idx) {
+              var h = 360/data.users.length * idx;
+              return {
+                label: p.name,
+                fill: false,
+                data: p.data,
+                lineTension: 0.1,
+                //backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "hsla(" + h + ",100%,50%,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 3,
+                pointHitRadius: 10,
+            }; })
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx2 = document.getElementById("userChart");
+    var usersChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: data.users.map(function(p, idx) {
+              var h = 360/data.users.length * idx;
+              return {
+                label: p.name,
+                fill: false,
+                data: p.data,
+                lineTension: 0.1,
+                //backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "hsla(" + h + ",100%,50%,1)",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 3,
+                pointHitRadius: 10,
+            }; })
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+  </body>
+</html>
