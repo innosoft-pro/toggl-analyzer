@@ -1,21 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
 Export detailed report on metaprojects in JSON using Toggl API
 """
-
-# import argparse
 import datetime
 import json
-import logging
-import sys
-
-import numpy as np
 import pandas as pd
 
 from toggl import Toggl
-import settings # application settings
+import settings
 
 
 if __name__ == '__main__':

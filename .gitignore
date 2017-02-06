@@ -1,2 +1,5 @@
 *.pyc
 data.js
+/toggl_metaprojects.ipynb
+.idea/
+api_token.txt

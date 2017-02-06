@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
 import datetime
 
-api_token = ''
+with open('api_token.txt', 'r') as fh:
+    api_token = fh.readline()
 
 # Date format used in settings, messages and input parameters.
 # Note it might be different from Toggl.date_format
@@ -16,7 +16,7 @@ end_date = '2016-05-23'
 
 # generate reports for last month by default
 # [today-timeframe .. today] to be specific
-#timeframe = datetime.timedelta(days=30)
+# timeframe = datetime.timedelta(days=30)
 timeframe = datetime.timedelta(days=30)
 
 workspace2meta = {
