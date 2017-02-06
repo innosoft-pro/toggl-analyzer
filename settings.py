@@ -2,7 +2,7 @@
 import datetime
 
 with open('api_token.txt', 'r') as fh:
-    api_token = fh.readline()
+    api_token = fh.readline().rstrip()
 
 # Date format used in settings, messages and input parameters.
 # Note it might be different from Toggl.date_format
