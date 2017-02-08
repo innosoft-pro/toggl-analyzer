@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import json
 
 with open('api_token.txt', 'r') as fh:
     api_token = fh.readline().rstrip()
@@ -19,11 +20,12 @@ end_date = '2016-05-23'
 # timeframe = datetime.timedelta(days=30)
 timeframe = datetime.timedelta(days=30)
 
-workspace2meta = {
-    'YORSO': 'YORSO',
-    'YORSO2': 'YORSO',
-    u"Минимакс": u"Минимакс"
-}
+# Collecting workspaces from external json file in following format
+# {
+#  "Workspace_name": "Toggl_name",
+# }
+with open('workspaces.json', 'r') as fh:
+    workspace2meta = json.load(fh)
 
 # Format string for date date representation in report,
 # https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
