@@ -19,13 +19,13 @@ timeframe = datetime.timedelta(days=30)
 ```
 This parameter heavily affects running time.
 
-Finally you should specify mapping from workspaces to metaprojects. It might be
+Finally you should specify mapping from workspaces to metaprojects in `workspaces.json`. It might be
 one-to-one or many-to-one mapping. Technically nothing prevents you from specifying
 one-to-many mapping but I bet this will mess all things up. Correct config looks like this:
-```py
-workspace2meta = {
-    'YORSO': 'YORSO',
-    'YORSO2': 'YORSO',
+```js
+{
+    "YORSO": "YORSO",
+    "YORSO-2": "YORSO"
 }
 ```
 Only workspaces mentioned in the mapping get processed.
@@ -37,7 +37,7 @@ Only workspaces mentioned in the mapping get processed.
 $ python2 metaprojects_report.py
 ```
 
-Then open `charts.html` in your favorite web-browser.
+Then open `index.html` in your favorite web-browser.
 
 ## Deploy
 To simplify deploy on server and provide ability to look on charts via web-browser - `Dockerfile` is included
