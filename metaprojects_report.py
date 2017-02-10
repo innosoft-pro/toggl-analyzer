@@ -49,7 +49,7 @@ if __name__ == '__main__':
     df['start'] = pd.to_datetime(df['start'])
     project_daily = df.set_index('start').groupby('project').resample('1D').sum() # overal time spent on a project day-by-day
     user_daily    = df.set_index('start').groupby('user').resample('1D').sum()    # time spent by employee day-by-day
-    dti = project_daily.index.get_level_values(1).unique()
+    dti = project_daily.index.get_level_values(1).unique().sort_values()
     date_labels = dti.map(lambda x: str(x.date())).tolist() # date strings to label points on a chart
 
     for_json['labels'] = date_labels
