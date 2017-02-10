@@ -40,8 +40,10 @@ $ python2 metaprojects_report.py
 Then open `index.html` in your favorite web-browser.
 
 ## Deploy
-To simplify deploy on server and provide ability to look on charts via web-browser - `Dockerfile` is included
- that build nginx with static route to charts. Therefore, if you want to see updated charts every day,
+To simplify deploy on server and provide ability to look on charts via web-browser - `Dockerfile`
+ that build nginx with static route to charts is included. Therefore, if you want to see updated charts every day,
  you should rebuild docker every night.
  1. Build docker `docker build -t toggl .`
  2. Run docker `docker run --name toggl_nginx -d -p 80:80 toggl` (change ports according to your needs)
+
+Also we have `build_env.sh` script that remove old container, and build new one.
