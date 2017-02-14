@@ -1,3 +1,5 @@
+![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+
 # Simple Toggl HTML report generator
 
 Generates graphs of daily time logged per project and per user.
