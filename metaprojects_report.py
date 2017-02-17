@@ -56,13 +56,13 @@ if __name__ == '__main__':
     for project in project_weekly.index.get_level_values(0).unique():
         for_json['projects'].append({
             'name': project,
-            'data': project_weekly.loc[project]['duration'].values.tolist()
+            'data': project_weekly.loc[project]['duration'].values.round(2).tolist()
         })
     # json.dumps(project_weekly.loc[u"Минимакс"]['duration'].values.tolist())
     for user in user_weekly.index.get_level_values(0).unique():
         for_json['users'].append({
             'name': user,
-            'data': user_weekly.loc[user]['duration'].values.tolist()
+            'data': user_weekly.loc[user]['duration'].values.round(2).tolist()
         })
 
     # print(json.dumps(reports))

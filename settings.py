@@ -9,16 +9,10 @@ with open('api_token.txt', 'r') as fh:
 # Note it might be different from Toggl.date_format
 date_format = "%Y-%m-%d"
 
-# start_date is a date of first report. I.e. to get first report for Jan 5-11,
-# first date should be Jan 12 end_date is a date of last report. I.e. if
-# semester ends 2015-05-08, it is next monday (May 11)
-start_date = '2017-01-02'
-end_date = '2017-05-23'
-
 # generate reports for last month by default
 # [today-timeframe .. today] to be specific
 # timeframe = datetime.timedelta(days=30)
-timeframe = datetime.timedelta(days=30)
+timeframe = datetime.timedelta(days=42)
 
 # Collecting workspaces from external json file in following format
 # {
