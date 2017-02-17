@@ -47,22 +47,22 @@ if __name__ == '__main__':
     df = pd.DataFrame(reports)
     # print(df.head())
     df['start'] = pd.to_datetime(df['start'])
-    project_daily = df.set_index('start').groupby('project').resample('1D').sum() # overal time spent on a project day-by-day
-    user_daily    = df.set_index('start').groupby('user').resample('1D').sum()    # time spent by employee day-by-day
-    dti = project_daily.index.get_level_values(1).unique().sort_values()
-    date_labels = dti.map(lambda x: str(x.date())).tolist() # date strings to label points on a chart
+    project_weekly = df.set_index('start').groupby('project').resample('1W').sum() # overal time spent on a project week-by-week
+    user_weekly    = df.set_index('start').groupby('user').resample('1W').sum()    # time spent by employee week-by-week
+    dti = project_weekly.index.get_level_values(1).unique().sort_values()
+    date_labels = dti.map(lambda x: str(x.date())).tolist() # date strings for labeling points on a chart
 
     for_json['labels'] = date_labels
-    for project in project_daily.index.get_level_values(0).unique():
+    for project in project_weekly.index.get_level_values(0).unique():
         for_json['projects'].append({
             'name': project,
-            'data': project_daily.loc[project]['duration'].values.tolist()
+            'data': project_weekly.loc[project]['duration'].values.tolist()
         })
-    # json.dumps(project_daily.loc[u"Минимакс"]['duration'].values.tolist())
-    for user in user_daily.index.get_level_values(0).unique():
+    # json.dumps(project_weekly.loc[u"Минимакс"]['duration'].values.tolist())
+    for user in user_weekly.index.get_level_values(0).unique():
         for_json['users'].append({
             'name': user,
-            'data': user_daily.loc[user]['duration'].values.tolist()
+            'data': user_weekly.loc[user]['duration'].values.tolist()
         })
 
     # print(json.dumps(reports))
