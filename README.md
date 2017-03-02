@@ -1,5 +1,5 @@
 ![License MIT](https://img.shields.io/badge/license-MIT-blue.svg)
-
+![Python version](https://img.shields.io/badge/python-3.5.2-blue.svg)
 # Simple Toggl HTML report generator
 
 Generates graphs of daily time logged per project and per user.
