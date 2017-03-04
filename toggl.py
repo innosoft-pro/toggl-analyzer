@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import requests
 import logging
@@ -51,7 +51,9 @@ class Toggl(object):
         https://github.com/toggl/toggl_api_docs/blob/master/chapters/workspaces.md#get-workspace-projects
         """
         result_list = list()
-        reply = requests.get('api/v8/workspaces/' + workspace_id + '/projects')
+        reply = requests.get('https://toggl.com/api/v8/workspaces/' + workspace_id + '/projects',
+                             headers={'Authorization': 'Basic ' + self.api_token}
+                             )
         for project in reply.json():
             if project['active']:
                 result_list.append(project['name'])
@@ -59,15 +61,16 @@ class Toggl(object):
 
     def weekly_report(self, workspace_id, since, until):
         """ Toggl weekly report for a given team """
-        return self._request('reports/api/v2/weekly', {
-            'workspace_id': workspace_id,
-            'since': since.strftime(self.date_format),
-            'until': until.strftime(self.date_format),
-            'user_agent': 'github.com/user2589/Toggl.py',
-            'order_field': 'title',
-            # title/day1/day2/day3/day4/day5/day6/day7/week_total
-            'display_hours': 'decimal',  # decimal/minutes
-        })
+        report = requests.get("https://toggl.com/reports/api/v2/weekly?\
+            workspace_id=" + workspace_id + "&\
+            since=" + since.strftime(self.date_format) + "&\
+            until=" + until.strftime(self.date_format) + "&\
+            user_agent=github.com/user2589/Toggl.py&\
+            order_field=title&\
+            display_hours=decimal",  # decimal/minutes
+                              headers={'Authorization': 'Basic ' + self.api_token}
+                              )
+        return report.json()
 
     def detailed_report(self, workspace_id, since, until):
         """ Toggl detailed report for a given team
@@ -79,17 +82,15 @@ class Toggl(object):
         records_read = 0
         records = []
         while True:
-            report_page = self._request('reports/api/v2/details', {
-                'workspace_id': workspace_id,
-                'since': since.strftime(self.date_format),
-                'until': until.strftime(self.date_format),
-                'user_agent': 'github.com/user2589/Toggl.py',
-                'order_field': 'date',
-                # date/description/duration/user in detailed reports
-                'order_desc': 'off',  # on/off
-                'display_hours': 'decimal',  # decimal/minutes
-                'page': page
-            })
+            report = requests.get(
+                "https://toggl.com/reports/api/v2/details?workspace_id=" + str(workspace_id)
+                + "&since=" + since.strftime(self.date_format)
+                + "&until=" + until.strftime(self.date_format) + "&user_agent=github.com/user2589/Toggl.py"
+                                                                 "&order_field=date&order_desc=off"
+                                                                 "&display_hours=decimal&page=" + str(page),
+                headers={'Authorization': 'Basic ' + self.api_token}
+            )
+            report_page = report.json()
             records.extend(report_page['data'])
 
             records_read += report_page['per_page']
