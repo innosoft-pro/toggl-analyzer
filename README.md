@@ -8,14 +8,12 @@ Projects might span several workspaces so we call them metaprojects to distingui
 
 ## Configuration
 
-The generator is configured through `settings.py` file.
-First of all you must get your Toggl API token and put it into
-```py
-api_token = '<Toggl API token>'
-```
-Without API token nothing will work.
+The generator is configured through `settings.py` and two data files.
 
-Besides you might configure number of days to generate report for:
+First of all you must get your Toggl API token and put it into
+`api_token.txt`. Without API token nothing will work.
+
+In `settings.py` you can configure number of days to generate report for:
 ```py
 timeframe = datetime.timedelta(days=30)
 ```
@@ -36,7 +34,12 @@ Only workspaces mentioned in the mapping get processed.
 ## Usage
 
 ```
-$ python2 metaprojects_report.py
+$ python3 metaprojects_report.py
+```
+or
+```
+$ chmod a+x metaprojects_report.py
+$ ./metaprojects_report.py
 ```
 
 Then open `index.html` in your favorite web-browser.
