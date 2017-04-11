@@ -40,56 +40,77 @@ class MetaProject:
                         'duration': round(float(record['dur']) / 3600000, 2)
                     })
         self.df = pd.DataFrame(reports)
-
-        for_json = {
-            'labels': None,
-            'projects': [],
-            'users': []
-        }
         self.df['start'] = pd.to_datetime(self.df['start'])
+        self.first_timestamp = self.df.min(axis=1)
+        self.projects = list(self.df.set_index('project').index.get_level_values(0).unique())
+        self.users = list(self.df.set_index('user').index.get_level_values(0).unique())
 
     def get_total_weekly_data(self):
-        return self.df.groupby(self.df.set_index('start').index.week).sum()
+        res = self.df.groupby(self.df.set_index('start').index.week).sum().to_dict(orient='split')
+        mondays_list = [(datetime.datetime.strptime(
+            settings.start_date.split('-')[0] + "-W" + str(week_number) + '-1', "%Y-W%W-%w")
+                        ).strftime('%Y-%m-%d') for week_number in res['index']]
+        return mondays_list
 
     def get_weekly_data_for_project(self, project):
-        project_data = self._get_prject_data(project)
-        return project_data.groupby(project_data.set_index('start').index.week).sum()
+        project_data = self._get_project_data(project)
+        return project_data.groupby(project_data.set_index('start').index.week).sum().to_dict()
 
     def get_weekly_data_per_person(self, user):
         user_data = self._get_person_data(user)
-        return user.groupby(user_data.set_index('start').index.week).sum()
+        return user.groupby(user_data.set_index('start').index.week).sum().to_dict()
 
-    def _get_prject_data(self, project):
+    def get_weekly_project_per_person(self, project):
+        project_data = self._get_project_data(project)
+        result_data = dict()
+        for user in self.users:
+            filtered_by_user = project_data.loc[project_data['user'] == user]
+            one_user_data = filtered_by_user.groupby(filtered_by_user.set_index('start').
+                                                     index.week).sum().to_dict(orient='list')
+            result_data[user] = [item if item else None for item in one_user_data['duration']]
+        return result_data
+
+    def get_weekly_project_per_person_avg(self, project):
+        project_data = self._get_project_data(project)
+        result_data = dict()
+        for user in self.users:
+            filtered_by_user = project_data.loc[project_data['user'] == user]
+            one_user_data = filtered_by_user.groupby(filtered_by_user.set_index('start').
+                                                     index.week).sum().to_dict(orient='list')
+            result_data[user] = sum(one_user_data['duration']) / float(len(one_user_data['duration'])
+                                                                       if len(one_user_data['duration']) else 1)
+        return result_data
+
+    def _get_project_data(self, project):
         return self.df.loc[self.df['project'] == project]
 
     def _get_person_data(self, user):
         return self.df.loc[self.df['user'] == user]
 
+
 if __name__ == '__main__':
+    metaproject = MetaProject()
+    projects = metaproject.projects
+    users = metaproject.users
 
+    resulting_json = {
+        "week_labels": metaproject.get_total_weekly_data(),
+        "projects": projects,
+        "users": users,
+        "data": {project: metaproject.get_weekly_project_per_person(project) for project in projects},
+        "avg": {project: metaproject.get_weekly_project_per_person_avg(project) for project in projects}
+    }
 
-    # print(df.head())
-
-    project_daily = df.set_index('start').groupby('project').resample(
-        '1D').sum()  # overal time spent on a project day-by-day
-    user_daily = df.set_index('start').groupby('user').resample('1D').sum()  # time spent by employee day-by-day
-    dti = project_daily.index.get_level_values(1).unique().sort_values()
-    date_labels = dti.map(lambda x: str(x.date())).tolist()  # date strings to label points on a chart
-
-    for_json['labels'] = date_labels
-    for project in project_daily.index.get_level_values(0).unique():
-        for_json['projects'].append({
-            'name': project,
-            'data': project_daily.loc[project]['duration'].values.tolist()
-        })
-    # json.dumps(project_daily.loc[u"Минимакс"]['duration'].values.tolist())
-    for user in user_daily.index.get_level_values(0).unique():
-        for_json['users'].append({
-            'name': user,
-            'data': user_daily.loc[user]['duration'].values.tolist()
-        })
-
-    # print(json.dumps(reports))
     with open('data.js', 'w') as fp:
-        s = "var data = %s;" % json.dumps(for_json)
-        fp.write(s)
+        week_labels = 'var labels = {};'.format(json.dumps(resulting_json["week_labels"]))
+        data = 'var data = {};'.format(json.dumps(resulting_json["data"]))
+        user = 'var users = {};'.format(json.dumps(resulting_json["users"]))
+        projects = 'var projects = {};'.format(json.dumps(resulting_json["projects"]))
+        timestamp = 'var init_time = "{}";'.format(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
+        avg = 'var avg = {};'.format(resulting_json['avg'])
+        fp.write(week_labels)
+        fp.write(data)
+        fp.write(user)
+        fp.write(projects)
+        fp.write(timestamp)
+        fp.write(avg)
