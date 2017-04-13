@@ -41,6 +41,7 @@ class MetaProject:
                     })
         self.df = pd.DataFrame(reports)
         self.df['start'] = pd.to_datetime(self.df['start'])
+        self.total_weeks = set(self.df.set_index('start').index.week)
         self.first_timestamp = self.df.min(axis=1)
         self.projects = list(self.df.set_index('project').index.get_level_values(0).unique())
         self.users = list(self.df.set_index('user').index.get_level_values(0).unique())
@@ -64,10 +65,15 @@ class MetaProject:
         project_data = self._get_project_data(project)
         result_data = dict()
         for user in self.users:
+            result_data[user] = list()
             filtered_by_user = project_data.loc[project_data['user'] == user]
             one_user_data = filtered_by_user.groupby(filtered_by_user.set_index('start').
-                                                     index.week).sum().to_dict(orient='list')
-            result_data[user] = [item if item else None for item in one_user_data['duration']]
+                                                     index.week).sum()
+            for week_number in self.total_weeks:
+                if week_number not in list(one_user_data.index):
+                    result_data[user].append(0)
+                else:
+                    result_data[user].append(one_user_data.loc[week_number]['duration'])
         return result_data
 
     def get_weekly_project_per_person_avg(self, project):
