@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html>
-    <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    <meta charset="utf-8">
     <title>Time logger report</title>
     <style>
-body {
-    background-color:white;
-}
-#header {
-    font-size:3em;
-    margin-bottom:30px;
-}
-#timestamp {
-    font-size:small;
-}
-#container {
-    max-width: 1600px;
-    min-width: 1300px;
-}
-.course {
-    margin: 1em 0;
-}
-.header {
-    font-size:2em;
-    margin-top:3em;
-}
-.chart {}
-.table {}
+        body {
+            background-color: white;
+        }
+
+        #header {
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+
+        #timestamp {
+            font-size: small;
+        }
+
+        #container {
+            max-width: 1600px;
+            min-width: 1300px;
+        }
+
+        .course {
+            margin: 1em 0;
+        }
+
+        .header {
+            font-size: 2em;
+            margin-top: 3em;
+        }
+
+        .chart {
+        }
+
+        .table {
+        }
     </style>
 </head>
 <body>
@@ -45,72 +54,72 @@ body {
 <script type="text/javascript" src="data.js"></script>
 <script>
     /* End comment at this line to debug template
-    // You can account for the following variables in this code:
+     // You can account for the following variables in this code:
 
-    var week_labels = ["May 25", "Jun 01", "Jun 08", "Jun 15", "Jun 22", "Jun 29", "Jul 06", "Jul 13", "Jul 27"];
-    var report_data = {
-        "Project Sunshine": {
-            "Team Alpha": [5.56, 13.65, 11.62, 10.08, 22.84, 26.76, null, null, null],
-            "Team Bravo": [22.01, 22.72, 21.77, 22.23, 15.3, 15.64, null, null, null],
-            "Team Charlie": [8.75, 20.7, 19.77, 15.8, 18.75, 14.84, null, null, null]
-        },
-        "Project Smiley": {
-            "Team Alpha": [5.21, 19.08, 22.65, 27.61, 12.44, 18.63, null, null, null],
-            "Team Bravo": [0.0, 2.95, 7.69, 11.23, 6.79, 4.93, null, null, null],
-            "Team Charlie": [11.17, 16.56, 16.64, 23.34, 11.25, 16.34, null, null, null]
-        }
-    };
-    var teams = ["Team Alpha", "Team Charlie", "Team Bravo"];
-    var courses = ["Project Sunshine", "electives"];
-    var timestamp = "Jun 09 2015 12:34PM";
-    var variance = {
-        "Project Sunshine": {
-            "Team Alpha": 4.1,
-            "Team Bravo": 8.79,
-            "Team Charlie": 63.64,
-        },
-        "Project Smiley": {
-            "Team Alpha": 13.94,
-            "Team Bravo": 22.93,
-            "Team Charlie": 6.7,
-        }
-    };
-    var average = {
-        "Project Sunshine": {
-            "Team Alpha": 18.0,
-            "Team Bravo": 19.0,
-            "Team Charlie": 17.88,
-        },
-        "Project Smiley": {
-            "Team Alpha": 17.37,
-            "Team Bravo": 6.1,
-            "Team Charlie": 21.61
-        }
-    };
+     var week_labels = ["May 25", "Jun 01", "Jun 08", "Jun 15", "Jun 22", "Jun 29", "Jul 06", "Jul 13", "Jul 27"];
+     var report_data = {
+     "Project Sunshine": {
+     "Team Alpha": [5.56, 13.65, 11.62, 10.08, 22.84, 26.76, null, null, null],
+     "Team Bravo": [22.01, 22.72, 21.77, 22.23, 15.3, 15.64, null, null, null],
+     "Team Charlie": [8.75, 20.7, 19.77, 15.8, 18.75, 14.84, null, null, null]
+     },
+     "Project Smiley": {
+     "Team Alpha": [5.21, 19.08, 22.65, 27.61, 12.44, 18.63, null, null, null],
+     "Team Bravo": [0.0, 2.95, 7.69, 11.23, 6.79, 4.93, null, null, null],
+     "Team Charlie": [11.17, 16.56, 16.64, 23.34, 11.25, 16.34, null, null, null]
+     }
+     };
+     var teams = ["Team Alpha", "Team Charlie", "Team Bravo"];
+     var courses = ["Project Sunshine", "electives"];
+     var timestamp = "Jun 09 2015 12:34PM";
+     var variance = {
+     "Project Sunshine": {
+     "Team Alpha": 4.1,
+     "Team Bravo": 8.79,
+     "Team Charlie": 63.64,
+     },
+     "Project Smiley": {
+     "Team Alpha": 13.94,
+     "Team Bravo": 22.93,
+     "Team Charlie": 6.7,
+     }
+     };
+     var average = {
+     "Project Sunshine": {
+     "Team Alpha": 18.0,
+     "Team Bravo": 19.0,
+     "Team Charlie": 17.88,
+     },
+     "Project Smiley": {
+     "Team Alpha": 17.37,
+     "Team Bravo": 6.1,
+     "Team Charlie": 21.61
+     }
+     };
 
-    /* */
+     /* */
 
-    google.load("visualization", "1", {packages:["table", "corechart"]});
+    google.load("visualization", "1", {packages: ["table", "corechart"]});
     google.setOnLoadCallback(drawChart);
 
     function drawChart() {
         // update timestamp
-        $("#timestamp").text("Last generated "+timestamp);
+        $("#timestamp").text("Last generated " + timestamp);
 
         /* =====================================================
-            Calculate team total
-           ===================================================== */
+         Calculate team total
+         ===================================================== */
         var total_name = 'Total load';
         var totals = {};
         var total_avgs = {};
         var total_stds = {};
-        teams.forEach(function(team){
+        teams.forEach(function (team) {
             totals[team] = [];
             var total_avg = 0;
             var weeks = 0;
-            week_labels.forEach(function(week_label, index){
+            week_labels.forEach(function (week_label, index) {
                 var week_total = null;
-                courses.forEach(function(course){
+                courses.forEach(function (course) {
                     if (report_data[course][team][index] != null) {
                         if (week_total == null) week_total = 0;
                         week_total += report_data[course][team][index];
@@ -131,30 +140,30 @@ body {
         variance[total_name] = total_stds;
         average[total_name] = total_avgs;
         /* =====================================================
-            End of Total part
-           ===================================================== */
+         End of Total part
+         ===================================================== */
 
         week_labels.push('Avg');
 
-        courses.forEach(function(course, index){
+        courses.forEach(function (course, index) {
             // get teams who have this course
             // for all weeks, for a given team,
             $('#container').append(
-                "<div class='"+index+"' id='"+course+"-container'>" +
-                    "<div class='header' id='"+course+"-header'>" + course + "</div>" +
-                    "<div class='chart' id='"+course+"-chart'>" + "</div>" +
-                    "<div class='table' id='"+course+"-table'>" + "</div>" +
+                "<div class='" + index + "' id='" + course + "-container'>" +
+                "<div class='header' id='" + course + "-header'>" + course + "</div>" +
+                "<div class='chart' id='" + course + "-chart'>" + "</div>" +
+                "<div class='table' id='" + course + "-table'>" + "</div>" +
                 "</div>");
 
             // Tables
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Person');
-            week_labels.forEach(function(week){
+            week_labels.forEach(function (week) {
                 data.addColumn('number', week);
             });
             data.addColumn('number', 'Std');
 
-            teams.forEach(function(team) {
+            teams.forEach(function (team) {
                 if (report_data[course].hasOwnProperty(team)) {
                     report_data[course][team].push(average[course][team]);
                     var row = [team];
@@ -163,23 +172,23 @@ body {
                 }
             });
 
-            var table = new google.visualization.Table(document.getElementById(course+'-table'));
+            var table = new google.visualization.Table(document.getElementById(course + '-table'));
             table.draw(data, {showRowNumber: false});
 
             // Charts
 
             data = new google.visualization.DataTable();
             data.addColumn('string', 'Week');
-            teams.forEach(function(team) {
+            teams.forEach(function (team) {
                 if (report_data[course].hasOwnProperty(team)) {
                     data.addColumn('number', team);
                 }
             });
 
-            for (var i=0; i< week_labels.length; i++) {
+            for (var i = 0; i < week_labels.length; i++) {
                 week = week_labels[i];
                 var row = [week];
-                teams.forEach(function(team) {
+                teams.forEach(function (team) {
                     if (report_data[course].hasOwnProperty(team)) {
                         row.push(report_data[course][team][i]);
                     }
@@ -189,7 +198,7 @@ body {
 
 
             var options = {
-                chartArea: {left:'5%',top:'5%',width:'75%',height:'85%'},
+                chartArea: {left: '5%', top: '5%', width: '75%', height: '85%'},
                 vAxis: {baseline: 0},
                 pointShape: 'square',
                 pointSize: 10,
@@ -197,7 +206,7 @@ body {
                 height: 430
             };
 
-            var chart = new google.visualization.LineChart(document.getElementById(course+'-chart'));
+            var chart = new google.visualization.LineChart(document.getElementById(course + '-chart'));
             chart.draw(data, options);
 
         });
@@ -206,17 +215,17 @@ body {
 </script>
 
 <script>
-//        var week_labels = ["May 23", "May 30", "Jun 06", "Jun 13", "Jun 20", "Jun 27", "Jul 04", "Jul 11", "Jul 18", "Jul 25", "Aug 01", "Aug 08"];
-        var week_labels = labels;
-//        var report_data = {"Electives": {"MSIT-ITeco": [3.78, 4.91, 22.04, 19.98, 8.94, 8.39, 6.76, 3.62, 2.11, 7.02, 2.51, null], "MSIT-AKBars": [9.92, 11.78, 9.02, 9.36, 10.15, 5.35, 5.31, 7.1, 13.66, 16.22, 2.54, null], "MSIT-Runa": [5.23, 8.72, 20.23, 24.74, 8.31, 7.82, 8.16, 10.28, 5.5, 4.29, 3.88, null], "MSIT-Kontur": [8.7, 10.7, 20.76, 11.54, 10.54, 23.87, 8.58, 11.9, 3.94, 8.88, 7.06, null], "MSIT-Acronis": [2.81, 6.34, 34.91, 30.88, 10.45, 16.85, 7.97, 11.97, 12.98, 18.65, 5.16, null], "MSIT-Dnevnik": [9.26, 14.99, 15.14, 15.7, 14.39, 10.82, 7.56, 9.02, 5.72, 4.87, 2.74, null], "MSIT-Visiology": [11.55, 12.17, 16.12, 12.82, 15.47, 10.88, 3.49, 5.5, 7.34, 4.46, 3.45, null]}, "MSIT Project II": {"MSIT-ITeco": [10.96, 21.6, 11.01, 10.51, 28.05, 26.25, 31.44, 33.04, 42.97, 28.95, 11.08, null], "MSIT-AKBars": [11.88, 16.25, 20.64, 24.5, 14.97, 14.14, 25.0, 13.95, 26.33, 30.65, 37.2, null], "MSIT-Runa": [17.0, 17.73, 6.7, 5.96, 8.56, 9.3, 17.97, 19.86, 25.28, 22.86, 31.5, null], "MSIT-Kontur": [28.17, 22.97, 19.8, 20.0, 19.4, 12.5, 24.99, 24.18, 17.47, 21.24, 19.14, null], "MSIT-Acronis": [22.84, 24.81, 1.97, 0.0, 15.73, 16.85, 18.09, 21.73, 17.34, 27.0, 33.91, null], "MSIT-Dnevnik": [22.08, 28.73, 26.25, 20.86, 18.98, 23.06, 25.87, 22.63, 23.93, 26.07, 14.18, null], "MSIT-Visiology": [13.4, 29.09, 18.73, 24.73, 16.88, 20.66, 10.18, 23.79, 29.33, 29.21, 40.33, null]}};
-        var report_data = data;
-//        var teams = ["MSIT-ITeco", "MSIT-AKBars", "MSIT-Runa", "MSIT-Kontur", "MSIT-Acronis", "MSIT-Dnevnik", "MSIT-Visiology"];
-        var teams = users;
-//        var courses = ["MSIT Project II", "Electives"];
-        var courses = projects;
-        var timestamp = init_time;
-//        var variance = {"Electives": {"MSIT-ITeco": 9.16, "MSIT-AKBars": 36.48, "MSIT-Acronis": 10.67, "MSIT-Kontur": 68.1, "MSIT-Runa": 7.12, "MSIT-Dnevnik": 61.2, "MSIT-Visiology": 13.36}, "MSIT Project II": {"MSIT-ITeco": 2.57, "MSIT-AKBars": 2.88, "MSIT-Acronis": 2.28, "MSIT-Kontur": 3.29, "MSIT-Runa": 4.0, "MSIT-Dnevnik": 1.25, "MSIT-Visiology": 1.2}};
-        var variance = avg;
-//        var average = {"Electives": {"MSIT-ITeco": 8.19, "MSIT-AKBars": 9.13, "MSIT-Acronis": 14.45, "MSIT-Kontur": 11.5, "MSIT-Runa": 9.74, "MSIT-Dnevnik": 10.02, "MSIT-Visiology": 9.39}, "MSIT Project II": {"MSIT-ITeco": 23.26, "MSIT-AKBars": 21.41, "MSIT-Acronis": 18.21, "MSIT-Kontur": 20.9, "MSIT-Runa": 16.61, "MSIT-Dnevnik": 22.96, "MSIT-Visiology": 23.3}};
-        var average = avg;
-        </script>
+    //        var week_labels = ["May 23", "May 30", "Jun 06", "Jun 13", "Jun 20", "Jun 27", "Jul 04", "Jul 11", "Jul 18", "Jul 25", "Aug 01", "Aug 08"];
+    var week_labels = labels;
+    //        var report_data = {"Electives": {"MSIT-ITeco": [3.78, 4.91, 22.04, 19.98, 8.94, 8.39, 6.76, 3.62, 2.11, 7.02, 2.51, null], "MSIT-AKBars": [9.92, 11.78, 9.02, 9.36, 10.15, 5.35, 5.31, 7.1, 13.66, 16.22, 2.54, null], "MSIT-Runa": [5.23, 8.72, 20.23, 24.74, 8.31, 7.82, 8.16, 10.28, 5.5, 4.29, 3.88, null], "MSIT-Kontur": [8.7, 10.7, 20.76, 11.54, 10.54, 23.87, 8.58, 11.9, 3.94, 8.88, 7.06, null], "MSIT-Acronis": [2.81, 6.34, 34.91, 30.88, 10.45, 16.85, 7.97, 11.97, 12.98, 18.65, 5.16, null], "MSIT-Dnevnik": [9.26, 14.99, 15.14, 15.7, 14.39, 10.82, 7.56, 9.02, 5.72, 4.87, 2.74, null], "MSIT-Visiology": [11.55, 12.17, 16.12, 12.82, 15.47, 10.88, 3.49, 5.5, 7.34, 4.46, 3.45, null]}, "MSIT Project II": {"MSIT-ITeco": [10.96, 21.6, 11.01, 10.51, 28.05, 26.25, 31.44, 33.04, 42.97, 28.95, 11.08, null], "MSIT-AKBars": [11.88, 16.25, 20.64, 24.5, 14.97, 14.14, 25.0, 13.95, 26.33, 30.65, 37.2, null], "MSIT-Runa": [17.0, 17.73, 6.7, 5.96, 8.56, 9.3, 17.97, 19.86, 25.28, 22.86, 31.5, null], "MSIT-Kontur": [28.17, 22.97, 19.8, 20.0, 19.4, 12.5, 24.99, 24.18, 17.47, 21.24, 19.14, null], "MSIT-Acronis": [22.84, 24.81, 1.97, 0.0, 15.73, 16.85, 18.09, 21.73, 17.34, 27.0, 33.91, null], "MSIT-Dnevnik": [22.08, 28.73, 26.25, 20.86, 18.98, 23.06, 25.87, 22.63, 23.93, 26.07, 14.18, null], "MSIT-Visiology": [13.4, 29.09, 18.73, 24.73, 16.88, 20.66, 10.18, 23.79, 29.33, 29.21, 40.33, null]}};
+    var report_data = data;
+    //        var teams = ["MSIT-ITeco", "MSIT-AKBars", "MSIT-Runa", "MSIT-Kontur", "MSIT-Acronis", "MSIT-Dnevnik", "MSIT-Visiology"];
+    var teams = users;
+    //        var courses = ["MSIT Project II", "Electives"];
+    var courses = projects;
+    var timestamp = init_time;
+    //        var variance = {"Electives": {"MSIT-ITeco": 9.16, "MSIT-AKBars": 36.48, "MSIT-Acronis": 10.67, "MSIT-Kontur": 68.1, "MSIT-Runa": 7.12, "MSIT-Dnevnik": 61.2, "MSIT-Visiology": 13.36}, "MSIT Project II": {"MSIT-ITeco": 2.57, "MSIT-AKBars": 2.88, "MSIT-Acronis": 2.28, "MSIT-Kontur": 3.29, "MSIT-Runa": 4.0, "MSIT-Dnevnik": 1.25, "MSIT-Visiology": 1.2}};
+    var variance = avg;
+    //        var average = {"Electives": {"MSIT-ITeco": 8.19, "MSIT-AKBars": 9.13, "MSIT-Acronis": 14.45, "MSIT-Kontur": 11.5, "MSIT-Runa": 9.74, "MSIT-Dnevnik": 10.02, "MSIT-Visiology": 9.39}, "MSIT Project II": {"MSIT-ITeco": 23.26, "MSIT-AKBars": 21.41, "MSIT-Acronis": 18.21, "MSIT-Kontur": 20.9, "MSIT-Runa": 16.61, "MSIT-Dnevnik": 22.96, "MSIT-Visiology": 23.3}};
+    var average = avg;
+</script>
