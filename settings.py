@@ -12,8 +12,8 @@ date_format = "%Y-%m-%d"
 # start_date is a date of first report. I.e. to get first report for Jan 5-11,
 # first date should be Jan 12 end_date is a date of last report. I.e. if
 # semester ends 2015-05-08, it is next monday (May 11)
-start_date = '2016-01-02'
-end_date = '2016-05-23'
+start_date = '2017-02-02'
+end_date = '2017-04-09'
 
 # generate reports for last month by default
 # [today-timeframe .. today] to be specific
